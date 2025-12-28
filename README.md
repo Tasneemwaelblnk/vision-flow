@@ -67,8 +67,23 @@ from visionflow.ops import DatasetOrganizer
 organizer = DatasetOrganizer("/output/train_set")
 organizer.build_id_map(records, group_col="national_id")
 
-# Create symlinks for ID cards
+# Task A: Create symlinks for ID cards
 organizer.process_task(records, "path_id", "national_id", "A", "symlink")
+
+# Task B: Process Selfies with a custom function
+def clean_and_save(src, dst):
+    img = Image.open(src)
+    # Perform operations (resize, crop, etc.)
+    img.save(dst)
+
+organizer.process_task(
+    records, 
+    "path_selfie", 
+    "national_id", 
+    "B", 
+    action="process",           # Use 'process' action
+    transform_func=clean_and_save # Pass your function here
+)
 ```
 
 ### 3. Core (Data Management)
